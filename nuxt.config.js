@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'auth-grag',
+    title: 'app',
     htmlAttrs: {
       lang: 'en'
     },
