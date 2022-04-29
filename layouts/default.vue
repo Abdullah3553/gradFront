@@ -1,7 +1,8 @@
 <template>
-  <div>
+  <div id="appp">
     <!-- Navbar -->
-    <div class="container position-sticky z-index-sticky top-0">
+
+    <div class="container position-sticky z-index-sticky top-0 my-0 py-0  ">
       <div class="row">
         <div class="col-12">
           <nav
@@ -241,11 +242,18 @@
 </template>
 
 <script>
+import HeaderBackground from "../components/headerBackground";
 export default {
-  name: "default.vue"
+  name: "default.vue",
+  components: {HeaderBackground}
 }
 </script>
 
 <style scoped>
 
+#appp{
+  background: url("/img/added/wall.jpg") no-repeat center;
+  height: 100%;
+  background-size: cover;
+}
 </style>

@@ -40,7 +40,6 @@ export default {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' },
-      { rel: 'stylesheet', href: '/css/material-icons.css'},
       { rel: 'stylesheet', href: '/css/nucleo-icons.css' },
       { rel: 'stylesheet', href: '/css/nucleo-svg.css' },
       { rel: 'stylesheet', href: '/css/material-kit.min.css' },
@@ -56,6 +55,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/vue-kinesis.js', ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
