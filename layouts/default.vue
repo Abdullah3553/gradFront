@@ -1,5 +1,6 @@
 <template>
   <v-app id="app">
+
     <v-app-bar
       app
       color="dark"
@@ -16,10 +17,10 @@
           </v-btn>
           <v-btn
             class="mx-1"
-            color="primary darken-1"
+            color="success darken-1"
             icon
           >
-            <v-icon>mdi-account</v-icon>
+            <v-icon>mdi-lock</v-icon>
           </v-btn>
           <v-btn
             v-for="link in links2"
@@ -33,8 +34,22 @@
       </v-container>
     </v-app-bar>
 
+
     <v-main class="dark darken-3">
+      <v-btn
+        v-show="fab"
+        v-scroll="fabCounter"
+        dark
+        fixed
+        bottom
+        right
+        color="error"
+        @click="goToTop"
+      >
+        <v-icon>mdi-arrow-up</v-icon>
+      </v-btn>
       <Nuxt/>
+
     </v-main>
   </v-app>
 
@@ -54,12 +69,23 @@ export default {
       links2: [
         'Github',
         'About',
-      ]
+      ],
+      fab:false
     }
   },
+  methods:{
+    fabCounter: function (event){
+      this.fab = event.target.scrollingElement.scrollTop >400;
+    },
+    goToTop: function (){
+      this.$vuetify.goTo(0)
+    }
+  }
 }
 </script>
 
 <style scoped>
-
+.floating{
+  position: absolute;
+}
 </style>
