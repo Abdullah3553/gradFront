@@ -21,15 +21,13 @@
           </v-parallax>
         </v-col>
       </v-row>
-    </v-container>
-    <v-container>
       <v-row :ref="ref.system">
       <v-col>
-        <v-parallax src="images/background.jpg" style="border-radius: 10px">
+        <v-img src="images/system.jpg"  style="border-radius: 10px" >
           <v-container>
             <v-row>
-              <v-col>
-                <div class="text-center backdrop mx-auto">
+              <v-col style="padding-top: 11rem">
+                <div class="text-center backdrop mx-auto pa-10">
 
                   <h1 class="pt-5">
                     <v-icon left large color="yellow">mdi-star</v-icon>Our System</h1>
@@ -40,92 +38,82 @@
               </v-col>
             </v-row>
           </v-container>
-        </v-parallax>
+        </v-img>
       </v-col>
-    </v-row>
-    </v-container>
-    <v-container>
+      </v-row>
       <v-row :ref="ref.face">
         <v-col>
-          <v-parallax src="images/background.jpg" style="border-radius: 10px">
+          <v-img src="images/methods/face.jpg" style="border-radius: 10px">
             <v-container>
               <v-row>
-                <v-col>
+                <v-col style="padding-top: 11rem">
                   <div class="text-center backdrop mx-auto" >
                     <h1 class="pt-16">Face Recognition</h1>
                   </div>
                 </v-col>
               </v-row>
             </v-container>
-          </v-parallax>
+          </v-img>
         </v-col>
       </v-row>
-    </v-container>
-    <v-container>
       <v-row :ref="ref.finger">
         <v-col>
-          <v-parallax src="images/background.jpg" style="border-radius: 10px">
+          <v-img src="images/methods/finger.jpg" style="border-radius: 10px">
             <v-container>
               <v-row>
-                <v-col>
+                <v-col style="padding-top: 11rem">
                   <div class="text-center backdrop mx-auto">
                     <h1 class="pt-16">Fingerprint Recognition</h1>
                   </div>
                 </v-col>
               </v-row>
             </v-container>
-          </v-parallax>
+          </v-img>
         </v-col>
       </v-row>
-    </v-container>
-    <v-container>
       <v-row :ref="ref.password">
         <v-col>
-          <v-parallax src="images/background.jpg" style="border-radius: 10px">
+          <v-img src="images/methods/password.jpg" style="border-radius: 10px">
             <v-container>
               <v-row>
-                <v-col>
+                <v-col style="padding-top: 11rem">
                   <div class="text-center backdrop mx-auto">
                     <h1 class="pt-16">Password</h1>
                   </div>
                 </v-col>
               </v-row>
             </v-container>
-          </v-parallax>
+          </v-img>
         </v-col>
       </v-row>
-    </v-container>
-    <v-container>
       <v-row :ref="ref.otp">
         <v-col>
-          <v-parallax src="images/methods/password.jpg" style="border-radius: 10px">
+          <v-img src="images/methods/otp.jpg" style="border-radius: 10px">
             <v-container>
               <v-row>
-                <v-col>
+                <v-col style="padding-top: 11rem">
                   <div class="text-center backdrop mx-auto">
                     <h1 class="pt-16">(O)ne (T)ime (P)assword</h1>
                   </div>
                 </v-col>
               </v-row>
             </v-container>
-          </v-parallax>
+          </v-img>
         </v-col>
       </v-row>
-    </v-container>
-    <v-container>
       <v-row :ref="ref.qr">
         <v-col>
-          <v-parallax src="images/background.jpg" style="border-radius: 10px">
+          <v-img src="images/methods/qr.jpg" style="border-radius: 10px">
             <v-container>
               <v-row>
-                <v-col>
+                <v-col style="padding-top: 11rem">
                   <div class="text-center backdrop mx-auto">
                     <h1 class="pt-16">QR Code</h1>
                   </div>
                 </v-col>
               </v-row>
             </v-container>
-          </v-parallax>
+          </v-img>
         </v-col>
       </v-row>
     </v-container>
@@ -163,6 +151,9 @@ export default {
         duration:1000
 
       })
+    },
+    click: function (){
+
     }
   },
   computed:{
