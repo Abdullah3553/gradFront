@@ -8,7 +8,7 @@
               <v-row>
                 <v-col>
                   <div class="text-center backdrop mx-auto">
-                    <h1 class="pt-10"><a href="#" class="header-link" @click="slideTo('system')">Authentication System</a></h1>
+                    <h1 class="pt-10"><a href="#" class="header-link" @click="slideTo(references.system)">Authentication System</a></h1>
                     <p>A Hybrid-methods Electronic Authentication System </p>
                       <a v-for="(button, index) in header_buttons" class="header-link" href="#"
                          @click="slideTo(button.slide_target)">{{button.text}}
@@ -21,7 +21,7 @@
           </v-parallax>
         </v-col>
       </v-row>
-      <v-row :ref="ref.system">
+      <v-row :ref="references.system">
       <v-col>
         <v-img src="images/system.jpg"  style="border-radius: 10px" >
           <v-container>
@@ -41,7 +41,7 @@
         </v-img>
       </v-col>
       </v-row>
-      <v-row :ref="ref.face">
+      <v-row :ref="references.face">
         <v-col>
           <v-img src="images/methods/face.jpg" style="border-radius: 10px">
             <v-container>
@@ -68,7 +68,7 @@
           </v-img>
         </v-col>
       </v-row>
-      <v-row :ref="ref.finger">
+      <v-row :ref="references.finger">
         <v-col>
           <v-img src="images/methods/finger.jpg" style="border-radius: 10px">
             <v-container>
@@ -95,7 +95,7 @@
           </v-img>
         </v-col>
       </v-row>
-      <v-row :ref="ref.password">
+      <v-row :ref="references.password">
         <v-col>
           <v-img src="images/methods/password.jpg" style="border-radius: 10px">
             <v-container>
@@ -122,7 +122,7 @@
           </v-img>
         </v-col>
       </v-row>
-      <v-row :ref="ref.otp">
+      <v-row :ref="references.otp">
         <v-col>
           <v-img src="images/methods/otp.jpg" style="border-radius: 10px">
             <v-container>
@@ -148,7 +148,7 @@
           </v-img>
         </v-col>
       </v-row>
-      <v-row :ref="ref.qr">
+      <v-row :ref="references.qr">
         <v-col>
           <v-img src="images/methods/qr.jpg" style="border-radius: 10px">
             <v-container>
@@ -156,7 +156,7 @@
                 <v-col style="padding-top: 11rem" @mouseenter="expand.qr = true" @mouseleave="expand.qr=false">
                   <div class="text-center backdrop mx-auto">
                     <h1 class="pt-16">
-                      <v-icon large color="secondary">mdi-qrcode-scan</v-icon>
+                      <v-icon large color="orange">mdi-qrcode-scan</v-icon>
                       QR Code</h1>
                   </div>
                   <v-expand-transition >
@@ -185,12 +185,13 @@ export default {
   name: "index.vue",
   data(){
     const ref={
+      top:0,
       system:'system',
-        face:'face',
-        finger:'finger',
-        password:'password',
-        otp:'otp',
-        qr:'qr'
+      face:'face',
+      finger:'finger',
+      password:'password',
+      otp:'otp',
+      qr:'qr'
     }
     return{
       header_buttons:[
@@ -200,30 +201,41 @@ export default {
         {text:"OTP", slide_target:ref.otp},
         {text:"QR", slide_target:ref.qr},
       ],
-      ref,
       expand:{
         face:false,
         finger:false,
         otp:false,
         password:false,
         qr:false,
-      }
+      },
+      references:ref
 
     }
   },
   methods:{
     slideTo: function (target){
-      this.$vuetify.goTo(this.$refs[`${target}`],{
+      if(target === 0)
+      this.$vuetify.goTo(0,{
         duration:1000
-
       })
+      else
+        this.$vuetify.goTo(this.$refs[target],{
+          duration:1000
+        })
     },
     click: function (){
 
     }
   },
   computed:{
+  },
+  mounted() {
+    this.$root.$on('slideEvent', ($event) => {
+      console.log($event)
+      this.slideTo($event)
+    })
   }
+
 }
 </script>
 
