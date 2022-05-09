@@ -183,6 +183,7 @@
 <script>
 export default {
   name: "index.vue",
+  layout:'landing',
   data(){
     const ref={
       top:0,
