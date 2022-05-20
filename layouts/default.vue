@@ -3,8 +3,7 @@
 
     <TopNav />
 
-    <v-main class="dark darken-3">
-
+    <v-main class="dark darken-3 backgroundLogin " >
       <Nuxt />
 
     </v-main>
@@ -25,5 +24,7 @@ export default {
 </script>
 
 <style scoped>
-
+.backgroundLogin{
+  background: url("static/images/backgroundBlur.jpg");
+}
 </style>

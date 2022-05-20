@@ -29,12 +29,13 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: [
+    { src: '@sweetalert2/theme-dark/dark.css', lang: 'css' }
+  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     // { src: '', ssr: false }
-
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -50,7 +51,15 @@ export default {
     }
   },
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: [
+    '@nuxtjs/axios',
+    'vue-sweetalert2/nuxt/no-css',
+    'vue-web-cam/nuxt',
+    '@nuxtjs/router'
+  ],
+  axios:{
+    baseURL: process.env.API_URL,
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {}
