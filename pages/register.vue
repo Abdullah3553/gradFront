@@ -1,10 +1,10 @@
 <template>
 <div id="RegisterPage">
   <v-container class="mid-screen " :style="'width:'+containerWidth " >
-    <v-stepper v-model="loginStepper.current">
+    <v-stepper v-model="registerStepper.current">
       <v-stepper-header>
         <v-stepper-step
-          :complete="loginStepper.current > 1"
+          :complete="registerStepper.current > 1"
           step="1"
         >
           Personal Data
@@ -13,7 +13,7 @@
         <v-divider></v-divider>
 
         <v-stepper-step
-          :complete="loginStepper.current > 2"
+          :complete="registerStepper.current > 2"
           step="2"
         >
           Authentication
@@ -22,7 +22,7 @@
 
       <v-stepper-items>
         <v-stepper-content class="pa-4" step="1">
-          <h3 class="text-left">Enter the personal Info : </h3>
+          <h3 class="mx-2 text-left">Enter the personal Info</h3>
           <v-form
             ref="form"
             v-model="registerForm.valid"
@@ -64,7 +64,7 @@
 
               </v-row>
               <v-divider class="my-4"></v-divider>
-              <h4>Address</h4>
+              <h4 class="mx-2 text-left">Address</h4>
               <v-row>
                 <v-col cols="4">
                   <v-text-field
@@ -101,7 +101,7 @@
           <v-divider dark></v-divider>
           <v-row id="loginFormActions" justify="end" class=" ma-0">
             <v-col class="pa-0 pt-4" cols="12">
-              <v-btn min-width="100%" outlined color="primary" @click="userNameCheck">Next Step</v-btn>
+              <v-btn min-width="100%" outlined color="primary" @click="nextStep">Next Step</v-btn>
             </v-col>
           </v-row>
         </v-stepper-content>
@@ -169,13 +169,9 @@ export default {
         value:-1,
         items: [],
       },
-      loginStepper: {
+      registerStepper: {
         current:1,
-        steps:4,
-        authStepper:{
-          current:1,
-          steps:4
-        }
+        steps:2,
       },
       registerForm:{
         valid:true,
@@ -209,22 +205,30 @@ export default {
     }
   },
   methods:{
-    userNameCheck: async function (){
-
-      let userCheck
-      try{
-        userCheck =  await this.$axios.$get(`user/find/authentication_methods/${this.registerForm.data.username}`)
-      }catch (err) {
-        console.log(err)
-        this.$swal.fire({
-          title:"Error",
-          icon:"error",
-          text:err.response.data.message
-        })
-        return
+    nextStep: async function (){
+      if(this.registerForm.valid){
+        try{
+          await this.$axios.$post('/user/register/check',{
+            username:this.registerForm.data.username,
+            email:this.registerForm.data.email
+          })
+          this.$swal.fire({
+            title:"username and email Available",
+            icon:'success',
+            toast:true,
+            position:'top-end',
+            showConfirmButton:false,
+            timer:1500
+          })
+          this.registerStepper.current++
+        }catch (err){
+          this.$swal.fire({
+            title:"Personal Info error",
+            icon:'error',
+            text:err.response.data.message
+          })
+        }
       }
-      this.tab.items = userCheck.authentication_methods
-      this.loginStepper.current++
     },
     click: function (){
       const x = document.getElementById('loginFormActions').clientWidth
@@ -267,7 +271,7 @@ export default {
   },
   computed:{
     containerWidth:function (){
-      return this.$data.loginStepper.steps > 3 ? '70%' : '50%'
+      return this.$data.registerStepper.steps > 3 ? '70%' : '50%'
     }
   }
 }

@@ -106,11 +106,7 @@ export default {
       },
       loginStepper: {
         current:1,
-        steps:4,
-        authStepper:{
-          current:1,
-          steps:4
-        }
+        steps:2,
       },
       loginForm:{
         valid:true,
