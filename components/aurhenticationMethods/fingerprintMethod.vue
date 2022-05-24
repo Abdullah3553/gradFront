@@ -3,9 +3,15 @@
 <v-container>
   <v-row>
     <v-col>
-      <v-form lazy-validation v-model="form.valid">
+      <v-switch
+        v-show="register"
+        v-model="selected"
+        label="Select Fingerprint Recognition"
+        class="mx-3"
+      ></v-switch>
+      <v-form v-model="form.valid" :disabled="!selected">
         <v-col cols="12">
-          <v-btn color="Primary" outlined @click="scanFingerprint">Scan Fingerprint</v-btn>
+          <v-btn :disabled="!selected" color="Primary" outlined @click="scanFingerprint">Scan Fingerprint</v-btn>
         </v-col>
         <v-col cols="12">
           <v-text-field v-model="form.data.priority"
@@ -17,7 +23,7 @@
       <v-divider dark></v-divider>
         <v-row id="loginFormActions" justify="end" class=" ma-0">
           <v-col class="pa-0 pt-4" cols="12">
-            <v-btn min-width="100%" color="primary" @click="submitForm">
+            <v-btn :disabled="!selected" min-width="100%" color="primary" @click="submitForm">
               Submit Fingerprint<v-icon class="mx-1">mdi-page-next</v-icon></v-btn>
           </v-col>
         </v-row>
@@ -34,10 +40,15 @@ export default {
     username:{
       required:true,
       type:String
-    }
+    },
+    register:{
+      type:Boolean,
+      default:false
+    },
   },
   data(){
     return{
+      selected:true,
       form:{
         valid:true,
         rules:{

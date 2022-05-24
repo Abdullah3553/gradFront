@@ -3,9 +3,16 @@
 <v-container>
   <v-row>
     <v-col>
-      <v-form v-model="form.valid">
+      <v-switch
+        v-show="register"
+        v-model="selected"
+        label="Select OTP"
+        class="mx-3"
+      ></v-switch>
+      <v-form v-model="form.valid" :disabled="!selected">
         <v-col cols="12">
           <v-text-field v-model="form.data.signature"
+                        v-show="!register"
                         type="text" :rules="form.rules.otp"
                         label="OTP" required placeholder="Enter The OTP sent to your mail">
           </v-text-field>
@@ -21,7 +28,7 @@
         <v-row id="loginFormActions" justify="end" class='mt-3 mr-2 mb-1'>
             <v-btn class="mx-1" color="primary" @click="submitForm">
               Submit OTP<v-icon class="mx-1">mdi-page-next</v-icon></v-btn>
-            <v-btn :disabled="form.requested" class="mx-1" :min-width="form.requested?'1%':'10%'" :color="form.requested?'success':'warning'" @click="requestOtp">
+            <v-btn v-show="!register" :disabled="form.requested" class="mx-1" :min-width="form.requested?'1%':'10%'" :color="form.requested?'success':'warning'" @click="requestOtp">
               {{form.requested?'':'Send OTP'}}<v-icon class="mx-1">mdi-email-send</v-icon></v-btn>
         </v-row>
     </v-col>
@@ -37,10 +44,15 @@ export default {
     username:{
       required:true,
       type:String
-    }
+    },
+    register:{
+      type:Boolean,
+      default:false
+    },
   },
   data(){
     return{
+      selected:true,
       form:{
         valid:false,
         requested:false,
@@ -85,10 +97,6 @@ export default {
           title:"OTP Failed",
           text:err.response.data.message,
           icon:'error',
-          position:'top-right',
-          toast:true,
-          showConfirmButton:false,
-          timer:2500
         })
         this.form.requested = false
 

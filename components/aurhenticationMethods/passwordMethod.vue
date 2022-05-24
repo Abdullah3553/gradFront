@@ -3,7 +3,13 @@
 <v-container>
   <v-row>
     <v-col>
-      <v-form v-model="form.valid">
+      <v-switch
+          v-show="register"
+          v-model="selected"
+          label="Select Password"
+          class="mx-3"
+      ></v-switch>
+      <v-form v-model="form.valid" :disabled="!selected">
         <v-col cols="12">
           <v-text-field v-model="form.data.signature"
                         type="password" :rules="form.rules.password"
@@ -18,9 +24,9 @@
         </v-col>
       </v-form>
       <v-divider dark></v-divider>
-        <v-row id="loginFormActions" justify="end" class=" ma-0">
+        <v-row id="loginFormActions" justify="end" class=" ma-0" >
           <v-col class="pa-0 pt-4" cols="12">
-            <v-btn min-width="100%" color="primary" @click="submitForm">
+            <v-btn min-width="100%" color="primary" @click="submitForm" :disabled="!selected">
               Submit Password<v-icon class="mx-1">mdi-page-next</v-icon></v-btn>
           </v-col>
         </v-row>
@@ -33,8 +39,15 @@
 <script>
 export default {
   name: "passwordMethod",
+  props:{
+    register:{
+      type:Boolean,
+      default:false
+    }
+  },
   data(){
     return{
+      selected:true,
       form:{
         valid:false,
         rules:{
@@ -57,7 +70,7 @@ export default {
   methods:{
     submitForm: function (){
       if(this.form.valid){
-        this.$emit('passwordSubmitted', this.form.data)
+        this.$emit('passwordSubmitted', {...this.form.data, selected:this.selected})
       }
     }
   }

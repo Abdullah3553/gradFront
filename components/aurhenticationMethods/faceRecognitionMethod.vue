@@ -3,17 +3,23 @@
 <v-container>
   <v-row>
     <v-col>
-      <v-form v-model="form.valid">
-      <v-btn :disabled="cam.open" @click="onStart" outlined color="primary">Open camera</v-btn>
-          <v-btn :disabled="!cam.open" @click="onStop" color="secondary">Close camera</v-btn>
-          <v-btn color="warning" :disabled="!cam.open"
+      <v-switch
+        v-show="register"
+        v-model="selected"
+        label="Select Face Recognition"
+        class="mx-3"
+      ></v-switch>
+      <v-form v-model="form.valid" :disabled="!selected">
+      <v-btn :disabled="cam.open || !selected" @click="onStart" outlined color="primary">Open camera</v-btn>
+          <v-btn :disabled="!cam.open || !selected" @click="onStop" color="secondary">Close camera</v-btn>
+          <v-btn color="warning" :disabled="!cam.open || !selected"
                  @click="onCapture">Capture Photo <v-icon>mdi-camera</v-icon> </v-btn>
-          <v-btn color="error" :disabled="!cam.open"
+          <v-btn color="error" :disabled="!cam.open || !selected"
                  @click="cam.img=[]">Delete All Captured Photos<v-icon>mdi-delete</v-icon> </v-btn>
           <v-container v-show="cam.open">
             <v-row>
               <v-col>
-                <vue-web-cam :playsinline="false" :selectFirstDevice="true" ref="webcam" height="185" @error="onError"/>
+                <vue-web-cam :disabled="!selected" :playsinline="false" :selectFirstDevice="true" ref="webcam" height="185" @error="onError"/>
               </v-col>
             </v-row>
           </v-container>
@@ -25,7 +31,7 @@
       <v-divider dark class="mt-3"></v-divider>
         <v-row id="loginFormActions" justify="end" class=" ma-0">
           <v-col class="pa-0 pt-4" cols="12">
-            <v-btn min-width="100%" color="primary" @click="submitForm">
+            <v-btn :disabled="!selected" min-width="100%" color="primary" @click="submitForm">
               Submit Images<v-icon class="mx-1">mdi-camera-wireless</v-icon></v-btn>
           </v-col>
         </v-row>
@@ -44,10 +50,15 @@ export default {
     username:{
       required:true,
       type:String
-    }
+    },
+    register:{
+      type:Boolean,
+      default:false
+    },
   },
   data(){
     return{
+      selected:true,
       cam:{
         img: [],
         open:false

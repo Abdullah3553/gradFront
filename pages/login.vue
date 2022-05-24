@@ -46,7 +46,7 @@
           <v-stepper-content step="2">
             <v-tabs
               v-model="tab.value"
-              align-with-title
+              centered
             >
               <v-tabs-slider color="primary"></v-tabs-slider>
 

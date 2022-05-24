@@ -109,13 +109,13 @@
         <v-stepper-content step="2">
           <v-tabs
             v-model="tab.value"
-            align-with-title
+            centered
           >
             <v-tabs-slider color="primary"></v-tabs-slider>
 
             <v-tab
               v-for="item in tab.items"
-              :key="item.method+'tabHead'"
+              :key="item.method+'RegTabHead'"
             >
               {{ item.method.replace('_', ' ') }}
             </v-tab>
@@ -123,13 +123,13 @@
           <v-tabs-items v-model="tab.value">
             <v-tab-item
               v-for="item in tab.items"
-              :key="item.method+'tabCont'"
+              :key="item.method+'RegTabCont'"
             >
               <v-card flat>
-                <PasswordMethod v-if="item.method==='password'" v-on:passwordSubmitted="addAuthenticator($event, item.id)"/>
-                <OtpMethod :username="registerForm.data.username" v-if="item.method==='otp'" v-on:OtpSubmitted="addAuthenticator($event, item.id)"/>
-                <FaceRecognitionMethod :username="registerForm.data.username" v-if="item.method==='face_recognition'" v-on:imagesSubmitted="addAuthenticator($event, item.id)"/>
-                <FingerprintMethod :username="registerForm.data.username" v-if="item.method ==='fingerprint_recognition'" v-on:fingerSubmitted="addAuthenticator($event, item.id)"/>
+                <PasswordMethod :register="true" v-if="item.method==='password'" v-on:passwordSubmitted="addAuthenticator($event, item.id)"/>
+                <OtpMethod :register="true" :username="registerForm.data.username" v-if="item.method==='otp'" v-on:OtpSubmitted="addAuthenticator($event, item.id)"/>
+                <FaceRecognitionMethod :register="true" :username="registerForm.data.username" v-if="item.method==='face_recognition'" v-on:imagesSubmitted="addAuthenticator($event, item.id)"/>
+                <FingerprintMethod :register="true" :username="registerForm.data.username" v-if="item.method ==='fingerprint_recognition'" v-on:fingerSubmitted="addAuthenticator($event, item.id)"/>
               </v-card>
             </v-tab-item>
           </v-tabs-items>
@@ -143,7 +143,7 @@
           <v-divider dark></v-divider>
           <v-row id="loginFormActions" justify="end" class=" ma-0">
             <v-col class="pa-0 pt-4" cols="12">
-              <v-btn min-width="100%" outlined color="primary" @click="performLogin">Login</v-btn>
+              <v-btn min-width="100%" outlined color="primary" @click="performRegister">Register</v-btn>
             </v-col>
           </v-row>
         </v-stepper-content>
@@ -220,6 +220,8 @@ export default {
             showConfirmButton:false,
             timer:1500
           })
+          const methods = await this.$axios.get('authentication-method/find/all/guest')
+          this.tab.items = methods.data
           this.registerStepper.current++
         }catch (err){
           this.$swal.fire({
@@ -235,19 +237,25 @@ export default {
       console.log()
     },
     addAuthenticator: function(authenticator, authentication_methodId){
-      const idx = this.authenticators.findIndex(ele=>Number(ele.authentication_methodId)===Number(authentication_methodId))
-      if(idx!==-1) this.authenticators[idx] = {...authenticator, authentication_methodId}
-      else this.authenticators.push({...authenticator, authentication_methodId})
-      this.$swal.fire({
-        toast:true,
-        title :"Method Submitted",
-        icon:"success",
-        showConfirmButton:false,
-        position:'top-right',
-        timer:1500
-      })
+      if(authenticator.selected){ // if the user chosen this method
+        authenticator = {
+          priority:authenticator.priority,
+          signature:authenticator.signature
+        }
+        const idx = this.authenticators.findIndex(ele=>Number(ele.authentication_methodId)===Number(authentication_methodId))
+        if(idx!==-1) this.authenticators[idx] = {...authenticator, authentication_methodId}
+        else this.authenticators.push({...authenticator, authentication_methodId})
+        this.$swal.fire({
+          toast:true,
+          title :"Method Submitted",
+          icon:"success",
+          showConfirmButton:false,
+          position:'top-right',
+          timer:1500
+        })
+      }
     },
-    performLogin: async function (){
+    performRegister: async function (){
       try{
         const response = await this.$axios.$post('user/login',{
           username:this.registerForm.data.username,
