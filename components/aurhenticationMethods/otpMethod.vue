@@ -3,9 +3,9 @@
 <v-container>
   <v-row>
     <v-col>
-      <v-form lazy-validation v-model="form.valid">
+      <v-form v-model="form.valid">
         <v-col cols="12">
-          <v-text-field v-model="form.data.otp"
+          <v-text-field v-model="form.data.signature"
                         type="text" :rules="form.rules.otp"
                         label="OTP" required placeholder="Enter The OTP sent to your mail">
           </v-text-field>
@@ -42,7 +42,7 @@ export default {
   data(){
     return{
       form:{
-        valid:true,
+        valid:false,
         requested:false,
         rules:{
           otp:[
@@ -56,7 +56,7 @@ export default {
           ]
         },
         data:{
-          otp:'',
+          signature:'',
           priority:''
         }
       }
@@ -69,8 +69,8 @@ export default {
       }
     },
     requestOtp: async function (){
-      const response = await this.$axios.$get(`methods/otp/generate/${this.username}`)
-      if(response){
+      try{
+        const response = await this.$axios.$get(`methods/otp/generate/${this.username}`)
         this.$swal.fire({
           title:"OTP Sent",
           icon:'success',
@@ -80,16 +80,18 @@ export default {
           position:'top-right'
         })
         this.form.requested = true
-      }else{
+      }catch (err){
         this.$swal.fire({
           title:"OTP Failed",
+          text:err.response.data.message,
           icon:'error',
           position:'top-right',
           toast:true,
           showConfirmButton:false,
-          timer:1500
+          timer:2500
         })
         this.form.requested = false
+
       }
     }
   }

@@ -9,7 +9,7 @@
       <v-row align="center" align-content="center" justify="center">
         <v-btn
           v-for="link in links1"
-          :key="link"
+          :key="link.name"
           text
           class="mx-1" nuxt
         >
@@ -18,16 +18,14 @@
         </v-btn>
         <v-btn
           class="mx-1"
-          color="success darken-1"
-          icon
-          nuxt
+          color="success darken-1" icon nuxt
         >
-          <nuxt-link style="text-decoration: none; color: inherit;" :to="{name:'home'}" ><v-icon >mdi-lock</v-icon></nuxt-link>
+          <a style="text-decoration: none; color: inherit;" href="/" ><v-icon >mdi-lock</v-icon></a>
 
         </v-btn>
         <v-btn
           v-for="link in links2"
-          :key="link"
+          :key="link.name"
           text
           class="mx-1" nuxt
         >

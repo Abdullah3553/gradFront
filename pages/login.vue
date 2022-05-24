@@ -38,7 +38,7 @@
             <v-divider dark></v-divider>
             <v-row id="loginFormActions" justify="end" class=" ma-0">
               <v-col class="pa-0 pt-4" cols="12">
-                <v-btn min-width="100%" outlined color="primary" @click="userNameCheck">Login</v-btn>
+                <v-btn min-width="100%" outlined color="primary" @click="userNameCheck">Check user</v-btn>
               </v-col>
             </v-row>
           </v-stepper-content>
@@ -52,20 +52,21 @@
 
               <v-tab
                 v-for="item in tab.items"
-                :key="item"
+                :key="item.method+'tabHead'"
               >
-                {{ item.replace('_', ' ') }}
+                {{ item.method.replace('_', ' ') }}
               </v-tab>
             </v-tabs>
             <v-tabs-items v-model="tab.value">
               <v-tab-item
                 v-for="item in tab.items"
-                :key="item"
+                :key="item.method+'tabCont'"
               >
                 <v-card flat>
-                  <PasswordMethod v-if="item==='password'" v-on:passwordSubmitted="addAuthenticator($event)"/>
-                  <OtpMethod :username="loginForm.data.username" v-if="item==='otp'" v-on:OtpSubmitted="addAuthenticator($event)"/>
-                  <FaceRecognitionMethod v-if="item==='face_recognition'" v-on:ImagesSubmitted="addAuthenticator($event)"/>
+                  <PasswordMethod v-if="item.method==='password'" v-on:passwordSubmitted="addAuthenticator($event, item.id)"/>
+                  <OtpMethod :username="loginForm.data.username" v-if="item.method==='otp'" v-on:OtpSubmitted="addAuthenticator($event, item.id)"/>
+                  <FaceRecognitionMethod :username="loginForm.data.username" v-if="item.method==='face_recognition'" v-on:imagesSubmitted="addAuthenticator($event, item.id)"/>
+                  <FingerprintMethod :username="loginForm.data.username" v-if="item.method ==='fingerprint_recognition'" v-on:fingerSubmitted="addAuthenticator($event, item.id)"/>
                 </v-card>
               </v-tab-item>
             </v-tabs-items>
@@ -76,6 +77,12 @@
 <!--                <v-btn min-width="100%" outlined color="primary" @click="userNameCheck">Login</v-btn>-->
 <!--              </v-col>-->
 <!--            </v-row>-->
+            <v-divider dark></v-divider>
+            <v-row id="loginFormActions" justify="end" class=" ma-0">
+              <v-col class="pa-0 pt-4" cols="12">
+                <v-btn min-width="100%" outlined color="primary" @click="performLogin">Login</v-btn>
+              </v-col>
+            </v-row>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
@@ -87,17 +94,15 @@
 import PasswordMethod from "../components/aurhenticationMethods/passwordMethod";
 import OtpMethod from "../components/aurhenticationMethods/otpMethod";
 import FaceRecognitionMethod from "../components/aurhenticationMethods/faceRecognitionMethod";
+import FingerprintMethod from "../components/aurhenticationMethods/fingerprintMethod";
 export default {
   name: "login",
-  components: {FaceRecognitionMethod, OtpMethod, PasswordMethod},
+  components: {FingerprintMethod, FaceRecognitionMethod, OtpMethod, PasswordMethod},
   data(){
     return{
       tab:{
         value:-1,
-        items: [
-
-        ],
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed ',
+        items: [],
       },
       loginStepper: {
         current:1,
@@ -136,22 +141,46 @@ export default {
         })
         return
       }
-      userCheck.authentication_methods.forEach(obj=> this.tab.items.push(obj.method))
+      this.tab.items = userCheck.authentication_methods
       this.loginStepper.current++
     },
     click: function (){
       const x = document.getElementById('loginFormActions').clientWidth
       console.log()
     },
-    addAuthenticator: function(authenticator){
-      this.authenticators.push(authenticator)
+    addAuthenticator: function(authenticator, authentication_methodId){
+      const idx = this.authenticators.findIndex(ele=>Number(ele.authentication_methodId)===Number(authentication_methodId))
+      if(idx!==-1) this.authenticators[idx] = {...authenticator, authentication_methodId}
+      else this.authenticators.push({...authenticator, authentication_methodId})
       this.$swal.fire({
         toast:true,
         title :"Method Submitted",
         icon:"success",
+        showConfirmButton:false,
         position:'top-right',
         timer:1500
       })
+    },
+    performLogin: async function (){
+      try{
+        const response = await this.$axios.$post('user/login',{
+          username:this.loginForm.data.username,
+          authenticators:this.authenticators
+        })
+        this.$swal.fire({
+          title:"Logged In Successfully",
+          text:`Refresh Token : ${response.refreshToken} Access Token : ${response.accessToken}`,
+          icon:"success"
+        })
+      }catch (err){
+        this.$swal.fire({
+          title:"Error in login" ,
+          text: err.response.data.message,
+          icon:"error"
+        })
+      }
+
+
     }
   },
   computed:{

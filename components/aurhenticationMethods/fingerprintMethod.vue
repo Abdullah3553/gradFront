@@ -5,10 +5,7 @@
     <v-col>
       <v-form lazy-validation v-model="form.valid">
         <v-col cols="12">
-          <v-text-field v-model="form.data.password"
-                        type="password" :rules="form.rules.password"
-                        label="Password" required placeholder="Enter Your password">
-          </v-text-field>
+          <v-btn color="Primary" outlined @click="scanFingerprint">Scan Fingerprint</v-btn>
         </v-col>
         <v-col cols="12">
           <v-text-field v-model="form.data.priority"
@@ -21,7 +18,7 @@
         <v-row id="loginFormActions" justify="end" class=" ma-0">
           <v-col class="pa-0 pt-4" cols="12">
             <v-btn min-width="100%" color="primary" @click="submitForm">
-              Submit Password<v-icon class="mx-1">mdi-page-next</v-icon></v-btn>
+              Submit Fingerprint<v-icon class="mx-1">mdi-page-next</v-icon></v-btn>
           </v-col>
         </v-row>
     </v-col>
@@ -33,22 +30,24 @@
 <script>
 export default {
   name: "FingerprintMethod",
+  props:{
+    username:{
+      required:true,
+      type:String
+    }
+  },
   data(){
     return{
       form:{
         valid:true,
         rules:{
-          password:[
-            v => !!v || 'Password is required',
-            v => v.length > 8 || 'Password must be at least 8 digits',
-          ],
           priority: [
             v => !!v || 'Priority is required',
             v => Number(v)>0 || 'Priority must be a positive number',
           ]
         },
         data:{
-          password:'',
+          signature:'',
           priority:''
         }
       }
@@ -56,10 +55,34 @@ export default {
   },
   methods:{
     submitForm: function (){
-      if(this.form.valid){
-        this.$emit('fingerprintSubmitted', this.form.data)
+      if(this.form.valid && this.form.data.signature){
+        this.$emit('fingerSubmitted', this.form.data)
       }
-    }
+    },
+    scanFingerprint: async function(){
+      const res = await this.$axios.$get(`methods/fingerprint/scan`)
+      console.log(res)
+      this.form.data.signature = res.data
+      if(res.valid){
+        this.$swal.fire({
+          title:"Scanned!",
+          icon:'success',
+          position:'top-right',
+          toast:true,
+          showConfirmButton:false,
+          timer:1500
+        })
+      }else{
+        this.$swal.fire({
+          title:"Error in finger scanning",
+          icon:'error',
+          position:'top-right',
+          toast:true,
+          showConfirmButton:false,
+          timer:2500
+        })
+      }
+    },
   }
 }
 </script>
