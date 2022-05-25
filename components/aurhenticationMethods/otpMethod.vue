@@ -28,7 +28,8 @@
         <v-row id="loginFormActions" justify="end" class='mt-3 mr-2 mb-1'>
             <v-btn class="mx-1" color="primary" @click="submitForm">
               Submit OTP<v-icon class="mx-1">mdi-page-next</v-icon></v-btn>
-            <v-btn v-show="!register" :disabled="form.requested" class="mx-1" :min-width="form.requested?'1%':'10%'" :color="form.requested?'success':'warning'" @click="requestOtp">
+            <v-btn v-show="!register" :disabled="form.requested" class="mx-1" :min-width="form.requested?'1%':'10%'"
+                   :color="form.requested?'success':'warning'" @click="requestOtp">
               {{form.requested?'':'Send OTP'}}<v-icon class="mx-1">mdi-email-send</v-icon></v-btn>
         </v-row>
     </v-col>
@@ -76,8 +77,15 @@ export default {
   },
   methods:{
     submitForm: function (){
+      if(this.register){
+        this.form.data.signature = 'empty otp'
+        if(this.form.data.priority){
+          this.$emit('OtpSubmitted',{...this.form.data, selected:this.selected})
+          return
+        }
+      }
       if(this.form.valid){
-        this.$emit('OtpSubmitted', this.form.data)
+        this.$emit('OtpSubmitted',{...this.form.data, selected:this.selected})
       }
     },
     requestOtp: async function (){

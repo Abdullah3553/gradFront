@@ -257,12 +257,17 @@ export default {
     },
     performRegister: async function (){
       try{
-        const response = await this.$axios.$post('user/login',{
+        const response = await this.$axios.$post('user/register',{
           username:this.registerForm.data.username,
+          email:this.registerForm.data.email,
+          birth_date:this.registerForm.data.birthDate,
+          city:this.registerForm.data.address.city.length>0?this.registerForm.data.address.city:undefined,
+          country:this.registerForm.data.address.country.length>0?this.registerForm.data.address.country:undefined,
+          street:this.registerForm.data.address.street.length>0?this.registerForm.data.address.street:undefined,
           authenticators:this.authenticators
         })
         this.$swal.fire({
-          title:"Logged In Successfully",
+          title:"Registered In Successfully",
           text:`Refresh Token : ${response.refreshToken} Access Token : ${response.accessToken}`,
           icon:"success"
         })

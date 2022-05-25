@@ -31,7 +31,9 @@
       <v-divider dark class="mt-3"></v-divider>
         <v-row id="loginFormActions" justify="end" class=" ma-0">
           <v-col class="pa-0 pt-4" cols="12">
-            <v-btn :disabled="!selected" min-width="100%" color="primary" @click="submitForm">
+            <v-btn v-show="!register" :disabled="!selected" min-width="100%" color="primary" @click="submitForm">
+              Submit Images<v-icon class="mx-1">mdi-camera-wireless</v-icon></v-btn>
+            <v-btn v-show="register" :disabled="!selected" min-width="100%" color="primary" @click="submitFormRegister">
               Submit Images<v-icon class="mx-1">mdi-camera-wireless</v-icon></v-btn>
           </v-col>
         </v-row>
@@ -86,20 +88,49 @@ export default {
           const file = this.DataURIToBlob(this.cam.img[i])
           formData.append('images', file, `image${i}.jpg`)
         }
-        const response = await this.$axios.$post(`methods/face/login?username=${this.username}&flag=true`,formData)
-        this.form.data.signature = response.path
-        this.$emit('imagesSubmitted', this.form.data)
+        try{
+          const response = await this.$axios.$post(`methods/face/login?username=${this.username}&flag=f`,formData)
+          this.form.data.signature = response.path
+          this.$emit('imagesSubmitted', {...this.form.data, selected:this.selected})
+        }catch (err){
+          this.$swal.fire({
+            title:'Error while uploading imag',
+            text:err.response.message,
+            icon:'error'
+          })
+        }
+
       }
     },
+    submitFormRegister: async function(){
+      if(this.cam.img.length===1 && this.form.valid){
+          const formData = new FormData();
+          for(let i=0;i<this.cam.img.length;i++){
+            const file = this.DataURIToBlob(this.cam.img[i])
+            formData.append('image', file, `image${i}.jpg`)
+          }
+          try{
+            const response = await this.$axios.$post(`methods/face/register?username=${this.username}&flag=f`,formData)
+            this.form.data.signature = response.path
+            this.$emit('imagesSubmitted', {...this.form.data, selected:this.selected})
+          }catch (err){
+            this.$swal.fire({
+              title:'Error while uploading imag',
+              text:err.response.message,
+              icon:'error'
+            })
+          }
+        }
+    },
     onCapture() {
-      if(this.cam.img.length >=5){
+       let maxLength = 5
+       if(this.register){
+         maxLength = 1
+       }
+      if(this.cam.img.length >=maxLength){
         this.$swal.fire({
-          title:"You cannot add more than 5 images",
-          showConfirmButton:false,
+          title:`You cannot add more than ${maxLength} images`,
           icon:'error',
-          toast:true,
-          timer:2500,
-          position:'top-right'
         })
         return
       }
@@ -109,7 +140,7 @@ export default {
         title:'Saved',
         toast:true,
         timer:1000,
-        position:'top'
+        position:'top-right'
       })
       this.cam.img.push(this.$refs.webcam.capture());
     },

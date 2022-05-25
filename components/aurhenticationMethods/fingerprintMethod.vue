@@ -11,7 +11,10 @@
       ></v-switch>
       <v-form v-model="form.valid" :disabled="!selected">
         <v-col cols="12">
-          <v-btn :disabled="!selected" color="Primary" outlined @click="scanFingerprint">Scan Fingerprint</v-btn>
+          <v-btn v-show="!register"  :disabled="!selected" color="Primary" outlined @click="scanFingerprint">Scan Fingerprint</v-btn>
+        </v-col>
+        <v-col cols="12">
+          <v-btn v-show="register" :disabled="!selected" color="Primary" outlined @click="enrollFingerprint">Enroll Fingerprint</v-btn>
         </v-col>
         <v-col cols="12">
           <v-text-field v-model="form.data.priority"
@@ -24,7 +27,7 @@
         <v-row id="loginFormActions" justify="end" class=" ma-0">
           <v-col class="pa-0 pt-4" cols="12">
             <v-btn :disabled="!selected" min-width="100%" color="primary" @click="submitForm">
-              Submit Fingerprint<v-icon class="mx-1">mdi-page-next</v-icon></v-btn>
+              Submit Fingerprint<v-icon class="mx-1">mdi-fingerprint</v-icon></v-btn>
           </v-col>
         </v-row>
     </v-col>
@@ -67,12 +70,11 @@ export default {
   methods:{
     submitForm: function (){
       if(this.form.valid && this.form.data.signature){
-        this.$emit('fingerSubmitted', this.form.data)
+        this.$emit('fingerSubmitted', {...this.form.data, selected:this.selected})
       }
     },
     scanFingerprint: async function(){
       const res = await this.$axios.$get(`methods/fingerprint/scan`)
-      console.log(res)
       this.form.data.signature = res.data
       if(res.valid){
         this.$swal.fire({
@@ -92,6 +94,27 @@ export default {
           showConfirmButton:false,
           timer:2500
         })
+      }
+    },
+    enrollFingerprint: async function(){
+      try{
+        const res = await this.$axios.$get(`methods/fingerprint/enroll`)
+        this.form.data.signature = res.data
+        this.$swal.fire({
+          title:"Scanned!",
+          icon:'success',
+          position:'top-right',
+          toast:true,
+          showConfirmButton:false,
+          timer:1500
+        })
+      }catch (err){
+        this.$swal.fire({
+          title:"Error in fingerprint enrollment",
+          icon:'error',
+          text:'check the console for more details'
+        })
+        console.log(err.response)
       }
     },
   }
