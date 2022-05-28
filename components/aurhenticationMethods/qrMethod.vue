@@ -15,8 +15,6 @@
           <v-btn :disabled="!cam.open || !selected" @click="onStop" color="secondary">Close camera</v-btn>
           <v-btn color="warning" :disabled="!cam.open || !selected"
                  @click="onCapture">Capture Photo <v-icon>mdi-camera</v-icon> </v-btn>
-          <v-btn color="error" :disabled="!cam.open || !selected"
-                 @click="cam.img=[]">Delete All Captured Photos<v-icon>mdi-delete</v-icon> </v-btn>
           <v-container v-show="cam.open">
             <v-row>
               <v-col>
@@ -32,7 +30,7 @@
         <v-container>
           <v-row v-show="qrImage.src && selected">
             <v-col class="pa-0">
-              <img :src="qrImage.src" style="max-height:146px;max-width: 146px "/>
+              <img alt="QR Image" :src="qrImage.src" style="max-height:146px;max-width: 146px "/>
               <v-btn color="error" outlined
                      v-show="register" :disabled="!selected" text
               >You must save/print this QR to use it in login later</v-btn>
@@ -55,7 +53,7 @@
                    v-on:click="qrRequest" min-width="100%"> Generate My QR</v-btn>
           </v-col>
           <v-col v-show="!register" class="pa-0 pt-2 mx-auto" cols="5">
-            <v-file-input :disabled="!selected" color="success"
+            <v-file-input class="pa-0 ma-0" :disabled="!selected" color="success"
                           :multiple="false" min-width="100%" @change="convertFile"
                           placeholder="Upload QR" v-model="form.file.chosenFile"
                           accept="image/png, image/jpeg, image/gif"></v-file-input>
@@ -144,32 +142,42 @@ export default {
       }
     },
     onCapture() {
-       let maxLength = 5
-       if(this.register){
-         maxLength = 1
-       }
-      if(this.cam.img.length >=maxLength){
-        this.$swal.fire({
-          title:`You cannot add more than ${maxLength} images`,
-          icon:'error',
-        })
-        return
-      }
-      this.$swal.fire({
-        showConfirmButton:false,
-        icon:'success',
-        title:'Saved',
-        toast:true,
-        timer:1000,
-        position:'top-right'
-      })
-      this.cam.img.push(this.$refs.webcam.capture());
+       this.$swal.fire({
+         title:"Show Your QR code to the camera",
+         text:'Wait until the timer finishes',
+         icon:'info',
+         toast:true,
+         showConfirmButton:false,
+         timer:5000,
+         position:"top"
+       }).then(()=>{
+         const img = this.$refs.webcam.capture()
+         const qrcode = new Decoder()
+         qrcode
+           .scan(img)
+           .then(result => {
+             const qrcode = new Encoder();
+             qrcode.write(new QRByte(result.data));
+             qrcode.make();
+             this.qrImage.src = qrcode.toDataURL()
+           })
+           .catch(error => {
+             this.$swal.fire({
+               title:"No QR code found",
+               text:'try to get closer to the camera',
+               icon:"error"
+             })
+             console.log(error)
+           });
+       })
+
     },
     camStarted(){
       if(this.register || this.cam.open === false){
         this.$refs.webcam.stop()
         this.cam.open = false
       }
+
     },
     onStop() {
       this.$refs.webcam.stop();

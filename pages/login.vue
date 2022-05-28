@@ -67,6 +67,7 @@
                   <OtpMethod :username="loginForm.data.username" v-if="item.method==='otp'" v-on:OtpSubmitted="addAuthenticator($event, item.id)"/>
                   <FaceRecognitionMethod :username="loginForm.data.username" v-if="item.method==='face_recognition'" v-on:imagesSubmitted="addAuthenticator($event, item.id)"/>
                   <FingerprintMethod :username="loginForm.data.username" v-if="item.method ==='fingerprint_recognition'" v-on:fingerSubmitted="addAuthenticator($event, item.id)"/>
+                  <QrMethod :username="loginForm.data.username" v-if="item.method ==='qr'" v-on:qrSubmitted="addAuthenticator($event, item.id)" />
                 </v-card>
               </v-tab-item>
             </v-tabs-items>
@@ -95,9 +96,10 @@ import PasswordMethod from "../components/aurhenticationMethods/passwordMethod";
 import OtpMethod from "../components/aurhenticationMethods/otpMethod";
 import FaceRecognitionMethod from "../components/aurhenticationMethods/faceRecognitionMethod";
 import FingerprintMethod from "../components/aurhenticationMethods/fingerprintMethod";
+import QrMethod from "../components/aurhenticationMethods/qrMethod";
 export default {
   name: "login",
-  components: {FingerprintMethod, FaceRecognitionMethod, OtpMethod, PasswordMethod},
+  components: {QrMethod, FingerprintMethod, FaceRecognitionMethod, OtpMethod, PasswordMethod},
   data(){
     return{
       tab:{
