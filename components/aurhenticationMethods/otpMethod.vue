@@ -79,6 +79,9 @@ export default {
     submitForm: function (){
       if(this.register){
         this.form.data.signature = 'empty otp'
+        if(this.form.data.priority){
+          this.form.valid = true
+        }
       }
       if(this.form.valid){
         this.$emit('OtpSubmitted',{...this.form.data, selected:this.selected})
