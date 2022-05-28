@@ -139,6 +139,12 @@ export default {
         const decodedQr = await qrDecoder.scan(this.qrImage.src)
         this.form.data.signature = decodedQr.data
         this.$emit('qrSubmitted', {...this.form.data, selected:this.selected})
+      }else{
+        this.$swal.fire({
+          title:'Missing information',
+          text:"Please Fill all required information",
+          icon:'error'
+        })
       }
     },
     onCapture() {
@@ -148,7 +154,7 @@ export default {
          icon:'info',
          toast:true,
          showConfirmButton:false,
-         timer:5000,
+         timer:4000,
          position:"top"
        }).then(()=>{
          const img = this.$refs.webcam.capture()

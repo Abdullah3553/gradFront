@@ -79,13 +79,15 @@ export default {
     submitForm: function (){
       if(this.register){
         this.form.data.signature = 'empty otp'
-        if(this.form.data.priority){
-          this.$emit('OtpSubmitted',{...this.form.data, selected:this.selected})
-          return
-        }
       }
       if(this.form.valid){
         this.$emit('OtpSubmitted',{...this.form.data, selected:this.selected})
+      }else{
+        this.$swal.fire({
+          title:'Missing information',
+          text:"Please Fill all required information",
+          icon:'error'
+        })
       }
     },
     requestOtp: async function (){

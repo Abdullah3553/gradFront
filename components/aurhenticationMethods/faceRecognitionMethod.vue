@@ -102,7 +102,12 @@ export default {
             icon:'error'
           })
         }
-
+      }else{
+        this.$swal.fire({
+          title:'Missing information',
+          text:"Please Fill all required information",
+          icon:'error'
+        })
       }
     },
     submitFormRegister: async function(){
@@ -123,7 +128,13 @@ export default {
               icon:'error'
             })
           }
-        }
+        }else{
+        this.$swal.fire({
+          title:'Missing information',
+          text:"Please Fill all required information",
+          icon:'error'
+        })
+      }
     },
     camStarted(){
       if(this.cam.open === false){

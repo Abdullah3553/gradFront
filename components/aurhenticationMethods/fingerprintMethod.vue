@@ -71,6 +71,12 @@ export default {
     submitForm: function (){
       if(this.form.valid && this.form.data.signature){
         this.$emit('fingerSubmitted', {...this.form.data, selected:this.selected})
+      }else{
+        this.$swal.fire({
+          title:'Missing information',
+          text:"Please Fill all required information",
+          icon:'error'
+        })
       }
     },
     scanFingerprint: async function(){
