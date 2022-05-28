@@ -26,7 +26,7 @@
       </v-form>
       <v-divider dark></v-divider>
         <v-row id="loginFormActions" justify="end" class='mt-3 mr-2 mb-1'>
-            <v-btn class="mx-1" color="primary" @click="submitForm">
+            <v-btn :disabled="!selected" class="mx-1" color="primary" @click="submitForm">
               Submit OTP<v-icon class="mx-1">mdi-page-next</v-icon></v-btn>
             <v-btn v-show="!register" :disabled="form.requested" class="mx-1" :min-width="form.requested?'1%':'10%'"
                    :color="form.requested?'success':'warning'" @click="requestOtp">

@@ -130,6 +130,7 @@
                 <OtpMethod :register="true" :username="registerForm.data.username" v-if="item.method==='otp'" v-on:OtpSubmitted="addAuthenticator($event, item.id)"/>
                 <FaceRecognitionMethod :register="true" :username="registerForm.data.username" v-if="item.method==='face_recognition'" v-on:imagesSubmitted="addAuthenticator($event, item.id)"/>
                 <FingerprintMethod :register="true" :username="registerForm.data.username" v-if="item.method ==='fingerprint_recognition'" v-on:fingerSubmitted="addAuthenticator($event, item.id)"/>
+                <QrMethod :register="true" :username="registerForm.data.username" v-if="item.method ==='qr'" v-on:qrSubmitted="addAuthenticator($event, item.id)" />
               </v-card>
             </v-tab-item>
           </v-tabs-items>
@@ -159,10 +160,11 @@ import FingerprintMethod from "../components/aurhenticationMethods/fingerprintMe
 import FaceRecognitionMethod from "../components/aurhenticationMethods/faceRecognitionMethod";
 import OtpMethod from "../components/aurhenticationMethods/otpMethod";
 import PasswordMethod from "../components/aurhenticationMethods/passwordMethod";
+import QrMethod from "../components/aurhenticationMethods/qrMethod";
 
 export default {
   name: "register",
-  components: {FingerprintMethod, FaceRecognitionMethod, OtpMethod, PasswordMethod},
+  components: {QrMethod, FingerprintMethod, FaceRecognitionMethod, OtpMethod, PasswordMethod},
   data(){
     return{
       tab:{

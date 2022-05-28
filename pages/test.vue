@@ -1,7 +1,6 @@
 <template>
 <div>
-  <v-btn @click="func2">message</v-btn>
-  <v-btn @click="click">test test tes</v-btn>
+
 </div>
 </template>
 
