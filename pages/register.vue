@@ -270,9 +270,11 @@ export default {
         })
         this.$swal.fire({
           title:"Registered In Successfully",
-          text:`Refresh Token : ${response.refreshToken} Access Token : ${response.accessToken}`,
+          text:`check the console for more details `,
           icon:"success"
         })
+        console.log('refresh token : ', response.refreshToken)
+        console.log('access token : ', response.accessToken)
       }catch (err){
         this.$swal.fire({
           title:"Error in login" ,
