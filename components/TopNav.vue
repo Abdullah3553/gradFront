@@ -35,7 +35,7 @@
 
           </v-btn>
           <v-row justify="space-around" v-else>
-            <v-menu offset-y origin="center center"
+            <v-menu offset-y origin="center center" open-on-hover
                     transition="slide-y-transition">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
