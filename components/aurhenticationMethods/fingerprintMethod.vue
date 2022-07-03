@@ -80,7 +80,7 @@ export default {
       }
     },
     scanFingerprint: async function(){
-      const res = await this.$axios.$get(`methods/fingerprint/scan`)
+      const res = await this.$axios.$get(`methods/fingerprint/scan/${this.username}`)
       this.form.data.signature = res.data
       if(res.valid){
         this.$swal.fire({
@@ -104,7 +104,8 @@ export default {
     },
     enrollFingerprint: async function(){
       try{
-        const res = await this.$axios.$get(`methods/fingerprint/enroll`)
+        const res = await this.$axios.$get(`methods/fingerprint/enroll/${this.username}`)
+        console.log(res)
         this.form.data.signature = res.data
         this.$swal.fire({
           title:"Scanned!",

@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { Encoder, QRByte, QRKanji, ErrorCorrectionLevel } from '@nuintun/qrcode'
+import { Encoder, QRByte} from '@nuintun/qrcode'
 import { Decoder } from '@nuintun/qrcode';
 export default {
   name: "QrMethod",
@@ -159,9 +159,7 @@ export default {
        }).then(()=>{
          const img = this.$refs.webcam.capture()
          const qrcode = new Decoder()
-         qrcode
-           .scan(img)
-           .then(result => {
+         qrcode.scan(img).then(result => {
              const qrcode = new Encoder();
              qrcode.write(new QRByte(result.data));
              qrcode.make();
